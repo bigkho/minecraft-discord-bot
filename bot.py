@@ -178,17 +178,18 @@ def run_discord_bot():
         name="announce",
         description="Choose the server channel you would like announcements in."
     )
-    async def set_status_channel(interaction: nextcord.Interaction, textChannel: nextcord.TextChannel):
+    async def set_status_channel(interaction: nextcord.Interaction):
+        await interaction.response.defer()
         # Check if the user has administrator permissions
-        if textChannel.permissions_for(interaction.user).administrator:
+        if interaction.channel.permissions_for(interaction.user).administrator:
             # Store the selected channel's ID for this server
-            server_channels[interaction.guild.id] = textChannel.id
-            await interaction.response.send_message(
-                f"Server status updates will be sent to {textChannel.mention}",
+            server_channels[interaction.guild.id] = interaction.channel.id
+            await interaction.followup.send(
+                f"Server status updates will be sent to {interaction.channel.mention}",
                 ephemeral=True  # Make the response ephemeral (visible only to the user who issued the command)
             )
         else:
-            await interaction.response.send_message(
+            await interaction.followup.send(
                 "You do not have permission to use this command.",
                 ephemeral=True
             )
