@@ -1,16 +1,18 @@
 import os
-
-import nextcord
-
-intents = nextcord.Intents.default()
-intents.message_content = True
 from nextcord.ext import commands
 import requests
 import asyncio
 from dotenv import load_dotenv
+import nextcord
+
+intents = nextcord.Intents.default()
+intents.message_content = True
+
 
 load_dotenv()
 MINECRAFT_SERVER_IP = os.getenv('MINECRAFT-SERVER-IP')
+
+server_channels = {}
 
 
 def get_minecraft_server_status():
@@ -42,7 +44,28 @@ def run_discord_bot():
     @bot.event
     async def on_ready():
         print(f'Logged in as {bot.user.name} ({bot.user.id})')
-        global previous_state
+        global previous_state, channel
+
+        for guild in bot.guilds:
+            # Get the default channel by name, if it exists
+            default_channel = next((channel for channel in guild.text_channels if channel.name == "general"),
+                                   None)
+
+            # If the default channel is found, store its ID
+            if default_channel:
+                server_channels[guild.id] = default_channel.id
+            else:
+                # If the default channel doesn't exist, you can choose another channel or handle this case differently
+                # For example, you can select the first available text channel
+                text_channels = [channel for channel in guild.text_channels if
+                                 isinstance(channel, nextcord.TextChannel)]
+                if text_channels:
+                    server_channels[guild.id] = text_channels[0].id
+                else:
+                    # Handle the case where there are no text channels in the server
+                    # You can choose to log an error or take another action here
+                    pass
+
         while True:
             server_data = get_minecraft_server_status()
             if server_data:
@@ -51,6 +74,10 @@ def run_discord_bot():
                 player_list = players.get('list', [])
 
                 if current_state != previous_state:
+
+                    for server_id, channel_id in server_channels.items():
+                        server = bot.get_guild(int(server_id))
+                        channel = server.get_channel(int(channel_id)) if server else None
 
                     if current_state:
                         await bot.change_presence(status=nextcord.Status.online,
@@ -61,7 +88,6 @@ def run_discord_bot():
                                                   activity=nextcord.Game("Server Offline"))
                         print('Currently Offline')
 
-                    channel = bot.get_channel(1035565878424641668)
                     if channel:
                         embed = nextcord.Embed(
                             title="Minecraft Server Status",
@@ -147,5 +173,24 @@ def run_discord_bot():
         )
 
         await interaction.response.send_message(embed=embed, ephemeral=False)
+
+    @bot.slash_command(
+        name="setchannel",
+        description="Set the channel for receiving server status updates (Server admins only)",
+    )
+    async def set_status_channel(interaction: nextcord.Interaction, textChannel: nextcord.abc.GuildChannel):
+        # Check if the user has administrator permissions
+        if interaction.user.guild_permissions.administrator:
+            # Store the selected channel's ID for this server
+            server_channels[interaction.guild.id] = textChannel.id
+            await interaction.response.send_message(
+                f"Server status updates will be sent to {textChannel.mention}",
+                ephemeral=True  # Make the response ephemeral (visible only to the user who issued the command)
+            )
+        else:
+            await interaction.response.send_message(
+                "You do not have permission to use this command.",
+                ephemeral=True  # Make the response ephemeral (visible only to the user who issued the command)
+            )
 
     bot.run(TOKEN)
