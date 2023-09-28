@@ -209,7 +209,7 @@ def run_discord_bot():
                   "difficult aspects of the game.",
             inline=False,
         )
-        embed.set_image(url="https://ibb.co/tXRyz71")
+        embed.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
 
         embed.add_field(
             name="Life Bringer",
@@ -218,7 +218,7 @@ def run_discord_bot():
                   "realm.",
             inline=False,
         )
-        embed.set_image(url="https://ibb.co/7VgDPQj")
+        embed.set_image(url="https://i.ibb.co/jRt7zcj/recipe1.png")
 
         embed.add_field(
             name="Totem of Undying",
@@ -226,7 +226,7 @@ def run_discord_bot():
                   "players and use it to craft a Totem.",
             inline=False,
         )
-        embed.set_image(url="https://ibb.co/v1Lb8Ks")
+        embed.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
 
         await interaction.response.send_message(embed=embed, ephemeral=False)
 
