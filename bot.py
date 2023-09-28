@@ -198,36 +198,46 @@ def run_discord_bot():
         description="Showcase recipes of the server."
     )
     async def set_status_channel(interaction: nextcord.Interaction):
-        embed = nextcord.Embed(
+        embed1 = nextcord.Embed(
             title="Lifesteal Official Recipes",
             color=nextcord.Color.magenta()
         )
 
-        embed.add_field(
+        embed1.add_field(
             name="Heart",
             value="Crafting a heart is made to be extremely difficult. It's done to show that you have conquered all "
                   "difficult aspects of the game.",
             inline=False,
         )
-        embed.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
+        embed1.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
 
-        embed.add_field(
+        embed2 = nextcord.Embed(
+            color=nextcord.Color.magenta()
+        )
+
+        embed2.add_field(
             name="Life Bringer",
             value="Once you lose all your hearts, it's game over. However, by having others sacrifice their hearts, "
                   "you can come back with 5 hearts to your name. This allows you to not be fully lost in the ban "
                   "realm.",
             inline=False,
         )
-        embed.set_image(url="https://i.ibb.co/jRt7zcj/recipe1.png")
+        embed2.set_image(url="https://i.ibb.co/jRt7zcj/recipe1.png")
 
-        embed.add_field(
+        embed3 = nextcord.Embed(
+            color=nextcord.Color.magenta()
+        )
+
+        embed3.add_field(
             name="Totem of Undying",
             value="An actual recipe now exists for the famous Totem of Undying. Obtain a player head by killing other "
                   "players and use it to craft a Totem.",
             inline=False,
         )
-        embed.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
+        embed3.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
 
-        await interaction.response.send_message(embed=embed, ephemeral=False)
+        await interaction.response.send_message(embed=embed1, ephemeral=False)
+        await interaction.response.send_message(embed=embed2, ephemeral=False)
+        await interaction.response.send_message(embed=embed3, ephemeral=False)
 
     bot.run(TOKEN)
