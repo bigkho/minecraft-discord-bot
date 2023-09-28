@@ -209,7 +209,7 @@ def run_discord_bot():
                   "difficult aspects of the game.",
             inline=False,
         )
-        embed1.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
+        embed1.set_image(url="https://i.ibb.co/jRt7zcj/recipe1.png")
 
         embed2 = nextcord.Embed(
             color=nextcord.Color.magenta()
@@ -222,7 +222,7 @@ def run_discord_bot():
                   "realm.",
             inline=False,
         )
-        embed2.set_image(url="https://i.ibb.co/jRt7zcj/recipe1.png")
+        embed2.set_image(url="https://i.ibb.co/Qn8VLkp/recipe2.png")
 
         embed3 = nextcord.Embed(
             color=nextcord.Color.magenta()
@@ -236,8 +236,6 @@ def run_discord_bot():
         )
         embed3.set_image(url="https://i.ibb.co/zsP1w08/recipe3.png")
 
-        await interaction.response.send_message(embed=embed1, ephemeral=False)
-        await interaction.response.send_message(embed=embed2, ephemeral=False)
-        await interaction.response.send_message(embed=embed3, ephemeral=False)
+        await interaction.response.send_message(embeds=[embed1, embed2, embed3])
 
     bot.run(TOKEN)
